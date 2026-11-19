@@ -1,0 +1,933 @@
+[
+  {
+    "feature": "Dashboard",
+    "scenario": "Open the dashboard",
+    "expected": "Five summary cards, three charts and recent activity are shown",
+    "actual": "products=27, stock=1408, value=30030, low=6, out=4, charts=5, activity items=8, animated blocks=11",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Low-stock and out-of-stock lists",
+    "expected": "Lists show the same number of products as the cards",
+    "actual": "View all (6) / View all (4)",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Dashboard totals match product list",
+    "expected": "Total products, low-stock and out-of-stock counts equal the filtered product list sizes",
+    "actual": "list: total=27, low=6, out=4  |  cards: 27/6/4",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Submit empty form",
+    "expected": "Inline errors for every required field and a \"Required fields are missing.\" toast; dialog stays open",
+    "actual": "4 inline errors (Product name is required. | Product code (SKU) is required. | Category is required. …); toast: \"Required fields are missing.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Invalid values (negative, letters, bad code)",
+    "expected": "Each invalid field gets a specific message; nothing is saved",
+    "actual": "Use only letters, numbers, dashes and underscores. | Unit price cannot be negative. | Quantity cannot be negative. | Minimum stock level must be a whole number.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Decimal quantity, zero price, scientific notation",
+    "expected": "Rejected with a clear message",
+    "actual": "Unit price must be greater than zero. | Quantity must be a whole number. | Minimum stock level must be a whole number.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Duplicate product code (different letter case)",
+    "expected": "Error: code already used; nothing saved",
+    "actual": "This product code is already used by another product.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Name longer than 100 characters",
+    "expected": "Error about the 100 character limit",
+    "actual": "Product name must be 100 characters or fewer.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Escape key closes the dialog without saving",
+    "expected": "Dialog closes; no new product",
+    "actual": "dialog closed",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Create a valid product",
+    "expected": "Success toast, dialog closes, product is listed with code in capitals",
+    "actual": "toast: \"Product \"Desk Lamp\" successfully created.\" | row: Desk Lamp LAMP-01 Office Supplies $19.90 8 min 3 In stock ",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Dashboard updates after creating a product (8 units × $19.90)",
+    "expected": "Products +1, stock +8, value +159.20, without a refresh",
+    "actual": "products 27→28, stock 1408→1416, value 30030→30189.2",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Name containing HTML / script text",
+    "expected": "Shown as plain text; no script runs",
+    "actual": "row text: <img src=x onerror=\"window.__xss=1\"> XSS-1 Furniture $1.00 0; script ran: false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "View product details",
+    "expected": "Detail page shows all fields and an opening-stock history row (0 → 8)",
+    "actual": "http://localhost:4173/products/prd_mwn5fadr62epag | history: 19 Nov 2026, 08:07 Received +8 0 8 Opening stock",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Open a product detail page directly by URL",
+    "expected": "Page loads without being redirected",
+    "actual": "loaded http://localhost:4173/products/prd_mwn5fadr62epag",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Edit form is pre-filled and quantity is locked",
+    "expected": "Fields hold current values; quantity input is disabled",
+    "actual": "name=\"Desk Lamp\", quantity disabled=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Edit a product",
+    "expected": "Success toast and the new name and price appear",
+    "actual": "toast: \"Product \"Desk Lamp LED\" successfully updated.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Receive 12 units (8 → 20)",
+    "expected": "Quantity increases, success toast, history shows previous 8 and new 20",
+    "actual": "qty=20; toast: \"Stock successfully received: +12 × Desk Lamp LED.\"; row: 19 Nov 2026, 08:08 Received +12 8 20 PO-1001",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Issue 5 units (20 → 15)",
+    "expected": "Quantity decreases, success toast",
+    "actual": "qty=15; toast: \"Stock successfully issued: −5 × Desk Lamp LED.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Issue more than available (100 of 15)",
+    "expected": "Blocked with \"Insufficient stock available\" (inline and toast); quantity stays 15",
+    "actual": "inline: \"Insufficient stock available. Only 15 in stock.\"; toast: \"Insufficient stock available. Only 15 in stock.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Quantity input: negative quantity (-4)",
+    "expected": "Rejected with a clear message; stock unchanged",
+    "actual": "message: \"Quantity cannot be negative.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Quantity input: zero",
+    "expected": "Rejected with a clear message; stock unchanged",
+    "actual": "message: \"Quantity must be greater than zero.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Quantity input: decimal (2.5)",
+    "expected": "Rejected with a clear message; stock unchanged",
+    "actual": "message: \"Quantity must be a whole number.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Quantity input: letters (abc)",
+    "expected": "Rejected with a clear message; stock unchanged",
+    "actual": "message: \"Quantity must be a whole number.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Quantity input: empty",
+    "expected": "Rejected with a clear message; stock unchanged",
+    "actual": "message: \"Quantity is required.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Issue with no product chosen (stock page)",
+    "expected": "Required message",
+    "actual": "Product is required.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Double-click the \"Receive stock\" button once with quantity 1",
+    "expected": "Exactly one movement is recorded (15 → 16)",
+    "actual": "quantity is 16 (expected 16)",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Issue every remaining unit (16 → 0)",
+    "expected": "Allowed; status becomes Out of stock",
+    "actual": "qty=0",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Issue from a product with zero stock",
+    "expected": "Blocked: insufficient stock",
+    "actual": "Insufficient stock available. Only 0 in stock.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Dashboard shows the product as out of stock",
+    "expected": "Out-of-stock count +2 compared to the start (this product and the zero-stock test product)",
+    "actual": "out-of-stock 4→6; product listed=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Receive 2 units when minimum level is 3",
+    "expected": "Status changes from Out of stock to Low stock",
+    "actual": "Low stock",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Receive 40 more units",
+    "expected": "Status changes to In stock",
+    "actual": "qty=42",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Large quantity (5,000,000 in one movement)",
+    "expected": "Rejected with a limit message",
+    "actual": "Quantity cannot be more than 1,000,000 in one movement.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Movement history for one product",
+    "expected": "Filtering by the product lists only its movements; previous/new quantities chain correctly",
+    "actual": "7 movements, chain ok=true, final=42",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Filter by movement type",
+    "expected": "Only issued rows remain",
+    "actual": "2 rows, all issued",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "Stock history pagination",
+    "expected": "First page shows 10 rows; next page loads more",
+    "actual": "page1=10, page2=10",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Pagination",
+    "expected": "First page shows 8 rows; page 2 shows different rows",
+    "actual": "total=29, page1=8, page2=8, overlap=0",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Search by name (\"mouse\", with extra spaces and capitals)",
+    "expected": "Only matching products",
+    "actual": "1 row(s): Wireless Mouse WM-200 Electronics $24.99 85 min 20 In stock ",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Search by product code (\"kb-4\")",
+    "expected": "Finds the keyboard",
+    "actual": "1 row(s)",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Search with no matches",
+    "expected": "Empty state \"No products match\" with a Clear filters button",
+    "actual": "empty state visible",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Filter by category (Furniture)",
+    "expected": "Every row is in Furniture",
+    "actual": "5 rows, all Furniture",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Filter by stock status (Out of stock)",
+    "expected": "Every row has the Out of stock badge",
+    "actual": "5 rows",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Combine category + status filters",
+    "expected": "Only products that match both",
+    "actual": "2 row(s)",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Filters survive a page refresh",
+    "expected": "URL keeps the filters; the same list is shown",
+    "actual": "http://localhost:4173/products?status=out-of-stock&category=cat_seed_3",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Dashboard link \"View all\" opens filtered list",
+    "expected": "Low-stock filter applied",
+    "actual": "status=low-stock, 6 rows",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Pagination resets when a filter narrows the list",
+    "expected": "Choosing a filter while on the last page shows results instead of an empty page",
+    "actual": "5 rows shown",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Delete shows a confirmation; Cancel keeps the product",
+    "expected": "Confirmation dialog appears; after Cancel the product is still listed",
+    "actual": "dialog shown, product kept",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Confirm delete",
+    "expected": "Success toast; product removed from the list",
+    "actual": "toast: \"Product \"<img src=x onerror=\"window.__xss=1\">\" successfully deleted. Undo\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Dashboard after delete",
+    "expected": "Product count drops by one",
+    "actual": "stored products 29 → 28",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Delete from the detail page returns to the list",
+    "expected": "Redirects to /products and product is gone",
+    "actual": "http://localhost:4173/products?q=lamp",
+    "status": "PASS"
+  },
+  {
+    "feature": "Stock",
+    "scenario": "History is kept after a product is deleted",
+    "expected": "Stock page still lists the movements, marked \"(deleted)\"",
+    "actual": "7 history rows marked deleted",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Submit empty category",
+    "expected": "Name is required (inline + toast)",
+    "actual": "Category name is required. | Required fields are missing.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Duplicate name (different capitals)",
+    "expected": "Rejected: already exists",
+    "actual": "A category with this name already exists.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Add a category",
+    "expected": "Success toast; category listed with 0 products",
+    "actual": "toast: \"Please correct the highlighted fields. Category \"Garden\" successfully created.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Edit a category",
+    "expected": "Rename saves and appears in the list and in the product filter",
+    "actual": "toast: \"Category \"Outdoor\" successfully updated.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Delete a category that products use",
+    "expected": "Blocked with a message naming how many products use it; category stays",
+    "actual": "toast: \"Cannot delete \"Electronics\": it is used by 6 products.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Delete an unused category (confirm)",
+    "expected": "Confirmation first, then removed with a success toast",
+    "actual": "toast: \"Category \"Outdoor\" successfully deleted. Undo\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Categories",
+    "scenario": "Product count link",
+    "expected": "Clicking the count opens the product list filtered to that category",
+    "actual": "4 Furniture products",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Add product when a category was renamed",
+    "expected": "Category list in the form shows current category names",
+    "actual": "Select a category…, Electronics, Office Supplies, Furniture, Packaging, Cleaning Supplies, Tools & Hardware",
+    "status": "PASS"
+  },
+  {
+    "feature": "Persistence",
+    "scenario": "Refresh the browser after making changes",
+    "expected": "Dashboard totals, products and recent activity are unchanged",
+    "actual": "before={\"stock\":1438,\"value\":30779.7,\"products\":27} after={\"stock\":1438,\"value\":30779.7,\"products\":27}",
+    "status": "PASS"
+  },
+  {
+    "feature": "Persistence",
+    "scenario": "Data is stored in the browser (localStorage)",
+    "expected": "A saved record exists with products, categories and movements",
+    "actual": "{\"products\":27,\"categories\":6,\"movements\":170}",
+    "status": "PASS"
+  },
+  {
+    "feature": "Persistence",
+    "scenario": "Saved data is damaged (invalid JSON)",
+    "expected": "App still opens using demo data and shows an info message",
+    "actual": "toast: \"Saved data could not be read, so the demo data was restored.\", products=27",
+    "status": "PASS"
+  },
+  {
+    "feature": "Persistence",
+    "scenario": "Saved data has the wrong shape (negative stock)",
+    "expected": "Rejected; demo data used",
+    "actual": "products=27",
+    "status": "PASS"
+  },
+  {
+    "feature": "Persistence",
+    "scenario": "Browser storage is blocked or full",
+    "expected": "App still works and warns that changes will not be saved",
+    "actual": "Could not save your changes in this browser. They will be lost on refresh. Category \"Temp\" successfully created.",
+    "status": "PASS"
+  },
+  {
+    "feature": "Persistence",
+    "scenario": "Reset demo data (with confirmation)",
+    "expected": "Confirmation first; afterwards demo data is back",
+    "actual": "rows=6, toast=\"Category \"Temp2\" successfully created. Demo data restored.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Routing",
+    "scenario": "Open /stock directly",
+    "expected": "Page loads and shows \"Receive and issue stock\"",
+    "actual": "http://localhost:4173/stock",
+    "status": "PASS"
+  },
+  {
+    "feature": "Routing",
+    "scenario": "Open /categories directly",
+    "expected": "Page loads and shows \"Group your products\"",
+    "actual": "http://localhost:4173/categories",
+    "status": "PASS"
+  },
+  {
+    "feature": "Routing",
+    "scenario": "Open /products directly",
+    "expected": "Page loads and shows \"Manage everything you keep in stock\"",
+    "actual": "http://localhost:4173/products",
+    "status": "PASS"
+  },
+  {
+    "feature": "Routing",
+    "scenario": "Open /products/does-not-exist directly",
+    "expected": "Page loads and shows \"Product not found\"",
+    "actual": "http://localhost:4173/products/does-not-exist",
+    "status": "PASS"
+  },
+  {
+    "feature": "Routing",
+    "scenario": "Open /some/unknown/page directly",
+    "expected": "Page loads and shows \"Page not found\"",
+    "actual": "http://localhost:4173/some/unknown/page",
+    "status": "PASS"
+  },
+  {
+    "feature": "Accessibility",
+    "scenario": "Icon-only buttons have names",
+    "expected": "Every button in the table has an accessible name",
+    "actual": "24 buttons named",
+    "status": "PASS"
+  },
+  {
+    "feature": "Accessibility",
+    "scenario": "Dialog is announced as a dialog and labelled",
+    "expected": "role=dialog, aria-modal, labelled by its title",
+    "actual": "{\"modal\":\"true\",\"labelled\":true}",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "dashboard at 1440px (desktop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "products at 1440px (desktop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "stock at 1440px (desktop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "categories at 1440px (desktop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "dashboard at 1024px (laptop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "products at 1024px (laptop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "stock at 1024px (laptop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "categories at 1024px (laptop)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=true, menu button=false",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "dashboard at 768px (tablet)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "products at 768px (tablet)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "stock at 768px (tablet)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "categories at 768px (tablet)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "dashboard at 375px (phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "products at 375px (phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "stock at 375px (phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "categories at 375px (phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "dashboard at 320px (small-phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "products at 320px (small-phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "stock at 320px (small-phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "categories at 320px (small-phone)",
+    "expected": "No sideways scrolling of the page; navigation reachable",
+    "actual": "page overflow=0px, sidebar visible=false, menu button=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "Mobile menu opens, navigates and closes",
+    "expected": "Hamburger opens the drawer; choosing Stock goes to /stock and closes it",
+    "actual": "http://localhost:4173/stock",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "Add product dialog fits a phone screen",
+    "expected": "Dialog fits the screen height and the submit button can be reached",
+    "actual": "dialog 375×747 at y=65",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Greeting uses the company name",
+    "expected": "Heading reads \"Good morning/afternoon/evening, Capitalist SL\" and the sidebar shows the same name",
+    "actual": "Good morning, Capitalist SL",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Summary icons all use one colour",
+    "expected": "The five summary cards use the same icon colour and background",
+    "actual": "5 cards, 1 colour style(s): rgb(231, 238, 213) / rgb(70, 96, 31)",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Total stock card shows a 7-day trend",
+    "expected": "A note such as \"+2% in 7 days\" and one small line graph",
+    "actual": "Total stock (units) 1,408 −1.9% in 7 days",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Numbers count up and finish on the right value (normal motion setting)",
+    "expected": "After a moment the card shows exactly the real total",
+    "actual": "first seen: 119.014, final: 1,408, expected 1408",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Open with Ctrl+K",
+    "expected": "Panel opens with the search box focused and lists actions and pages",
+    "actual": "focused role=combobox",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Arrow keys move the highlight",
+    "expected": "Down changes the highlighted row, Up returns to it",
+    "actual": "option-0 → option-1 → option-0",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Type a product name and press Enter",
+    "expected": "The product is listed first; Enter opens its page",
+    "actual": "http://localhost:4173/products/prd_seed_1",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Type a category name and press Enter",
+    "expected": "The category is listed first; Enter opens the products list filtered to it",
+    "actual": "http://localhost:4173/products?category=cat_seed_3 → 4 rows",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Pick an action (\"receive\")",
+    "expected": "The Receive stock dialog opens with Receive selected",
+    "actual": "dialog open=true, receive selected=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Search with no matches",
+    "expected": "Shows \"Nothing found\" and Enter does nothing",
+    "actual": "Esc",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Sidebar search button opens the panel",
+    "expected": "Clicking Search… opens it; Escape closes it",
+    "actual": "opened=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Search panel",
+    "scenario": "Escape on the panel while a dialog is open behind it",
+    "expected": "Only the panel closes; the dialog underneath stays open",
+    "actual": "panel closed=true, dialog still open=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Sort by quantity, low to high (whole list, not just the page)",
+    "expected": "Rows are in rising order and the very first row has the lowest quantity (0)",
+    "actual": "quantities: 0, 0, 0, 0, 4, 6, 7, 9; aria-sort=ascending",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Page 2 continues the same order",
+    "expected": "First quantity on page 2 is not lower than the last on page 1",
+    "actual": "page1 ends 9, page2 starts 11",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Click again for high to low, again to return to default",
+    "expected": "Second click reverses (largest first); third click clears the sorting",
+    "actual": "first desc value=320, final aria-sort=none, url=http://localhost:4173/products",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Sort by price and by name",
+    "expected": "Prices rise; names are in A to Z order",
+    "actual": "prices 4.2, 5.4, 6.75, 6.9, 7.25, 8.3, 8.95, 9.8 | names 27-inch Monitor / 3-Drawer Filing Cabinet / 5-Tier Bookshelf …",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Sort by status",
+    "expected": "Most urgent first: Out of stock rows come before Low stock, then In stock",
+    "actual": "00001111",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Sorting is kept after a refresh",
+    "expected": "Same sort and order after reloading the page",
+    "actual": "http://localhost:4173/products?sort=status&dir=asc",
+    "status": "PASS"
+  },
+  {
+    "feature": "Sorting",
+    "scenario": "Changing the sort while on page 2 goes back to page 1",
+    "expected": "Shows rows 1 to 8",
+    "actual": "Showing 1–8 of 27 1 2 … 4",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Stock gauge matches the status",
+    "expected": "Out of stock = empty bar, Low stock = partly filled, In stock = full",
+    "actual": "empty=1, partial=40%/45%, full=5",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Quick action on a row opens receive/issue with the product chosen",
+    "expected": "Dialog opens with \"Wireless Mouse (WM-200)\" already selected",
+    "actual": "Wireless Mouse (WM-200)",
+    "status": "PASS"
+  },
+  {
+    "feature": "Export",
+    "scenario": "Download all products as CSV",
+    "expected": "File named products-DATE.csv with a header row and one row per product",
+    "actual": "products-2026-11-19.csv: 27 rows, header: Product name,Product code (SKU),Category,Description,Unit pr",
+    "status": "PASS"
+  },
+  {
+    "feature": "Export",
+    "scenario": "Export respects the search filter",
+    "expected": "Searching \"WM-200\" then exporting gives 1 product row, with a success message",
+    "actual": "1 row(s); \"Exported 1 product to CSV.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Export",
+    "scenario": "Export is switched off when nothing matches",
+    "expected": "Button is disabled with an empty list",
+    "actual": "disabled",
+    "status": "PASS"
+  },
+  {
+    "feature": "Export",
+    "scenario": "Product names that look like spreadsheet formulas are made safe",
+    "expected": "A product named =1+1 appears as '=1+1 in the file, so Excel will not run it",
+    "actual": "'=1+1,CSV-1,Furniture,,2,1,1,Low stock,2,2026-11-19",
+    "status": "PASS"
+  },
+  {
+    "feature": "Export",
+    "scenario": "Download stock movements as CSV (all and filtered)",
+    "expected": "Row counts equal the saved movements; \"Issued only\" exports only issued rows",
+    "actual": "all 163/163, issued 73/73; stock-movements-2026-11-19.csv",
+    "status": "PASS"
+  },
+  {
+    "feature": "Undo",
+    "scenario": "Delete a product, then press Undo",
+    "expected": "Product returns with the same quantity (85) and its history is still there",
+    "actual": "count 27 → 26 → 27; row: Wireless Mouse WM-200 Electronics $24.99 85 min 20 In stock ; toast: \"Product \"Wireless Mouse\" restored.\"",
+    "status": "PASS"
+  },
+  {
+    "feature": "Undo",
+    "scenario": "Restored product keeps its stock history",
+    "expected": "Opening its page shows the same movements as before",
+    "actual": "5 history rows shown (of 5), quantity 85",
+    "status": "PASS"
+  },
+  {
+    "feature": "Undo",
+    "scenario": "Delete a category, then press Undo",
+    "expected": "Category returns to the list",
+    "actual": "removed=true, restored=true",
+    "status": "PASS"
+  },
+  {
+    "feature": "Undo",
+    "scenario": "No Undo button on a refused delete",
+    "expected": "Trying to delete a category in use shows an error without Undo",
+    "actual": "error only",
+    "status": "PASS"
+  },
+  {
+    "feature": "Undo",
+    "scenario": "Undo button disappears after about 8 seconds",
+    "expected": "Notification and Undo are gone after 9 seconds",
+    "actual": "visible at start=true, after 9s=0",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Restock button on a low-stock product",
+    "expected": "Opens Receive with the product chosen; receiving 100 units removes it from the low-stock count",
+    "actual": "Standing Desk 140 cm: low-stock 6 → 5",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Click a bar in \"Stock by category\"",
+    "expected": "Opens the products list filtered to that category",
+    "actual": "Office Supplies: 5 rows",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Click a slice of the stock status chart",
+    "expected": "Opens the products list filtered to that status",
+    "actual": "http://localhost:4173/products?status=in-stock → 8 rows",
+    "status": "PASS"
+  },
+  {
+    "feature": "Dashboard",
+    "scenario": "Status list under the chart is clickable (keyboard friendly)",
+    "expected": "Clicking \"Out of stock\" opens the filtered list",
+    "actual": "http://localhost:4173/products?status=out-of-stock",
+    "status": "PASS"
+  },
+  {
+    "feature": "Products",
+    "scenario": "Stock level graph on the product page",
+    "expected": "A graph is drawn and hovering shows the quantity and what changed",
+    "actual": "tooltip: 17 Nov 2026, 23:09 Issued 26 (Internal use) : 102 units",
+    "status": "PASS"
+  },
+  {
+    "feature": "Layout",
+    "scenario": "Collapse and expand the sidebar",
+    "expected": "Sidebar shrinks to icons, links keep their names, choice survives a refresh",
+    "actual": "wide=256px, collapsed=76px, after refresh=76px, expanded again=256px",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "Search button in the phone top bar",
+    "expected": "Opens the search panel and it fits inside the screen",
+    "actual": "panel 16–359px of 375px",
+    "status": "PASS"
+  },
+  {
+    "feature": "Responsive",
+    "scenario": "Hero buttons and cards fit a small phone (320px)",
+    "expected": "No sideways scrolling on the dashboard",
+    "actual": "overflow 0px",
+    "status": "PASS"
+  },
+  {
+    "feature": "General",
+    "scenario": "Browser console during the whole test run",
+    "expected": "No errors or uncaught exceptions",
+    "actual": "no errors",
+    "status": "PASS"
+  }
+]
